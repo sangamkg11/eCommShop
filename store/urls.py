@@ -9,7 +9,9 @@ urlpatterns = [
    
     path('', views.store,name='store'),
     #to accept the categoryslug in the link
-    path('<slug:category_slug>/', views.store,name='product_by_category'),
+    path('category/<slug:category_slug>/', views.store,name='product_by_category'),
     #to accept the product slug in the link
-    path('<slug:category_slug>/<slug:product_slug>/', views.product_details,name='product_details'),
+    path('category/<slug:category_slug>/<slug:product_slug>/', views.product_details,name='product_details'),
+    #urls for the search 
+    path('search/',views.search, name='search'),
 ]

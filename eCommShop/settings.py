@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'category',
     'accounts',
     'store',
+    'carts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.menu_links',        #by defining here we can call them by menu_links at anywhere
+                'carts.context_processors.counter',
             ],
         },
     },
