@@ -72,7 +72,7 @@ def search(request):
         if keyword:
             products=Product.objects.order_by('-created_at').filter(Q(product_description__icontains=keyword) | Q(product_name__icontains=keyword)) 
             #here we use this Q for make the implimatation of the or opertor like if it match any one of this 2 condtion then it return tru
-              #__icontains search for the whole content in description as well as its related content also
+            #__icontains search for the whole content in description as well as its related content also
             products_count=products.count()
     context={
         'products':products,

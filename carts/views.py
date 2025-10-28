@@ -48,18 +48,44 @@ def add_cart(request,product_id):
     cart.save()
 
     #getting the cartitems here 
-    try:
-        cart_item=CartItem.objects.get(product=product,cart=cart)
+
+    is_cart_item_exist=CartItem.objects.filter(product=product,cart=cart).exists()
+    if is_cart_item_exist:
+        cart_item=CartItem.objects.filter(product=product,cart=cart)
         #getting the variation in the cart
-        if len(product_variation)>0:
-            cart_item.variation.clear()
-            for item in product_variation:
-                cart_item.variation.add(item)
+        #existing variation ->database
+        #current variation -> product variation list
+        #item_id ->database
+
+        ex_var_list=[]
+        id=[]
+        for item in cart_item:
+            existing_variation=item.variation.all()
+            ex_var_list.append(list(existing_variation))
+            id.append(item.id)
+
+        # print(existing_variation)
+
+        if product_variation in ex_var_list:
+            #just only increase the cart item quantity
+
+            index=ex_var_list.index(product_variation)
+            item_id=id[index]
+            item=CartItem.objects.get(product=product,id=item_id)
+            item.quantity +=1
+            item.save()
+            
+        else:
+            # add the item as a new product
+            item=CartItem.objects.create(product=product,quantity=1,cart=cart)
+            if len(product_variation)>0:
+                item.variation.clear()
+                item.variation.add(*product_variation)
 
 
-        cart_item.quantity +=1
-        cart_item.save()
-    except CartItem.DoesNotExist:
+        # cart_item.quantity +=1
+            item.save()
+    else :
         cart_item=CartItem.objects.create(
             product=product,
             quantity=1,
@@ -67,8 +93,7 @@ def add_cart(request,product_id):
         )
         if len(product_variation)>0:
             cart_item.variation.clear()
-            for item in product_variation:
-                cart_item.variation.add(item)
+            cart_item.variation.add(*product_variation)
         cart_item.save()
     #this line is use to check  when we add the product in cart it will go or not
 
@@ -84,25 +109,28 @@ def add_cart(request,product_id):
 
 
 #method to remove decrease the quantity
-
-def remove_cart(request,product_id):
+def remove_cart(request,product_id,cart_item_id):
     cart=Cart.objects.get(cart_id=_cart_id(request))
     product=get_object_or_404(Product,id=product_id)
-    cart_item=CartItem.objects.get(cart=cart,product=product)
-    if cart_item.quantity >1:
-        cart_item.quantity -=1
-        cart_item.save()
-    else:
-        cart_item.delete()
+    try:
+        cart_item=CartItem.objects.get(cart=cart,product=product,id=cart_item_id)
+        if cart_item.quantity >1:
+            cart_item.quantity -=1
+            cart_item.save()
+        else:
+            cart_item.delete()
+    except:
+        pass
     
     return redirect('cart')
 
 
-def del_cart_item(request,product_id):
+def del_cart_item(request,product_id,cart_item_id):
     
     cart=Cart.objects.get(cart_id=_cart_id(request))
     product=get_object_or_404(Product,id=product_id)
-    cart_item=CartItem.objects.get(product=product,cart=cart)
+    cart_item=CartItem.objects.get(product=product,cart=cart,id=cart_item_id)
+
     
     cart_item.delete()
     return redirect('cart')
