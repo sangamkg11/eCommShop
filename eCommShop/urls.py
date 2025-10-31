@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+import accounts
 from eCommShop.settings import MEDIA_ROOT
-import store
+# import store
 from . import views
 
 
@@ -30,4 +31,5 @@ urlpatterns = [
     path('store/',include('store.urls')),
     path('cart/',include('carts.urls')),
     path('', views.home,name='home'),
+    path('accounts/',include('accounts.urls')),
 ]+static(settings.MEDIA_URL,document_root=MEDIA_ROOT)
