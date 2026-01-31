@@ -32,4 +32,6 @@ urlpatterns = [
     path('cart/',include('carts.urls')),
     path('', views.home,name='home'),
     path('accounts/',include('accounts.urls')),
+    # @orders path 
+    path('orders/',include('orders.urls')),
 ]+static(settings.MEDIA_URL,document_root=MEDIA_ROOT)
