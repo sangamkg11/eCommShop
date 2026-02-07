@@ -170,6 +170,9 @@
     var url = "{% url 'payments' %}";
     var orderID = "{{ order.order_number }}";
     var paymentMethod = "PayPal";
+    var redirect_url = "{% url 'order_complete' %}";
+
+
     paypal.Buttons({
         style: {
             layout: 'vertical',
@@ -207,8 +210,11 @@
 
                         }),
                     })
-                    // .then(response => response.json())
-                    // .then(data => console.log(data))
+                        .then((response) => response.json())
+                        .then((data) => {
+                            window.location.href = redirect_url + "?order_number=" + data.order_number + "&payment_id=" + data.transactionID;
+
+                        })
                 }
             });
         }
