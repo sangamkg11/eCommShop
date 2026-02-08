@@ -78,6 +78,9 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.username+","+self.email
     
+    def full_name(self):
+        return f'{self.f_name} {self.l_name}'
+    
     #mandatory this to use for the custom user model
 
     def has_perm(self,perm,obj=None):
