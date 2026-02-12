@@ -75,7 +75,9 @@ def login(request):
         email=request.POST['email']
         password=request.POST['password']
 
-        user=auth.authenticate(email=email,password=password)
+        # user=auth.authenticate(email=email,password=password)
+        #best for axes login
+        user=auth.authenticate(request=request,email=email,password=password)
 
         if user is not None:
             try:
